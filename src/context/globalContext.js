@@ -3,35 +3,54 @@ import axios from 'axios';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+// Create context
 const GlobalContext = React.createContext();
 
-export const GlobalProvider = ({children}) => {
-
+export const GlobalProvider = ({ children }) => {
     const [incomes, setIncomes] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [error, setError] = useState(null);
 
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('authToken');
+
+    // Create an instance of Axios with default headers
+    const axiosInstance = axios.create({
+        baseURL: BASE_URL,
+        headers: {
+            Authorization: token ? `Bearer ${token}` : '', // Include token if available
+        },
+    });
+
     // Add income
     const addIncome = async (income) => {
         try {
-            await axios.post(`${BASE_URL}/add-income`, income);
+            await axiosInstance.post(`/add-income`, income);
             getIncomes();
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || err.message);
         }
     };
 
     // Get incomes
     const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}/get-incomes`);
-        setIncomes(response.data);
-        console.log(response.data);
+        try {
+            const response = await axiosInstance.get(`/get-incomes`);
+            setIncomes(response.data);
+            console.log(response.data);
+        } catch (err) {
+            setError(err.response?.data?.message || err.message);
+        }
     };
 
     // Delete income
     const deleteIncome = async (id) => {
-        await axios.delete(`${BASE_URL}/delete-income/${id}`);
-        getIncomes();
+        try {
+            await axiosInstance.delete(`/delete-income/${id}`);
+            getIncomes();
+        } catch (err) {
+            setError(err.response?.data?.message || err.message);
+        }
     };
 
     // Calculate total income
@@ -42,24 +61,32 @@ export const GlobalProvider = ({children}) => {
     // Add expense
     const addExpense = async (expense) => {
         try {
-            await axios.post(`${BASE_URL}/add-expense`, expense);
+            await axiosInstance.post(`/add-expense`, expense);
             getExpenses();
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || err.message);
         }
     };
 
     // Get expenses
     const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}/get-expenses`);
-        setExpenses(response.data);
-        console.log(response.data);
+        try {
+            const response = await axiosInstance.get(`/get-expenses`);
+            setExpenses(response.data);
+            console.log(response.data);
+        } catch (err) {
+            setError(err.response?.data?.message || err.message);
+        }
     };
 
     // Delete expense
     const deleteExpense = async (id) => {
-        await axios.delete(`${BASE_URL}/delete-expense/${id}`);
-        getExpenses();
+        try {
+            await axiosInstance.delete(`/delete-expense/${id}`);
+            getExpenses();
+        } catch (err) {
+            setError(err.response?.data?.message || err.message);
+        }
     };
 
     // Calculate total expenses
