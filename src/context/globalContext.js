@@ -15,12 +15,14 @@ export const GlobalProvider = ({ children }) => {
     const token = localStorage.getItem('authToken');
 
     // Create an instance of Axios with default headers
-    const axiosInstance = axios.create({
-        baseURL: BASE_URL,
-        headers: {
-            Authorization: token ? `Bearer ${token}` : '', // Include token if available
-        },
-    });
+    // Create an instance of Axios with default headers
+const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`, // Include token with 'Bearer ' prefix
+    },
+  });
 
     // Add income
     const addIncome = async (income) => {
