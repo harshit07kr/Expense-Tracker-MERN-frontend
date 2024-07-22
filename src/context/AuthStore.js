@@ -38,7 +38,7 @@ const useAuthStore = create((set) => ({
   login: async () => {
     try {
       const { Loginform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/api/v1/login`, Loginform, {
+      const res = await axios.post(`${baseURL}/login`, Loginform, {
         headers: {
           'Content-Type': 'application/json',
         },
