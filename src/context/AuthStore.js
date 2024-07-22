@@ -38,9 +38,7 @@ const useAuthStore = create((set) => ({
   login: async () => {
     try {
       const { Loginform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/login`, Loginform, {
-        withCredentials: true,
-      });
+      const res = await axios.post(`${baseURL}/login`, Loginform);
       set({ loggedIn: true });
       set({ useremail: Loginform.email });
       localStorage.setItem('useremail', Loginform.email);  // Save to localStorage
@@ -58,7 +56,7 @@ const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     try {
-      await axios.get(`${baseURL}/check-auth`, { withCredentials: true });
+      await axios.get(`${baseURL}/check-auth`);
       set({ loggedIn: true });
     } catch (err) {
       console.error('Auth check failed:', err.response ? err.response.data : err.message);
@@ -69,9 +67,7 @@ const useAuthStore = create((set) => ({
   signup: async () => {
     try {
       const { Signupform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/signup`, Signupform, {
-        withCredentials: true,
-      });
+      const res = await axios.post(`${baseURL}/signup`, Signupform);
 
       set({
         Signupform: {
@@ -87,7 +83,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
-      await axios.get(`${baseURL}/logout`, { withCredentials: true });
+      await axios.get(`${baseURL}/logout`);
       set({ loggedIn: false });
       set({ useremail: null });
       localStorage.removeItem('useremail');  // Remove from localStorage
