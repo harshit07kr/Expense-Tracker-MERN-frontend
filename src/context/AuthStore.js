@@ -1,19 +1,19 @@
-import axios from "axios";
-import { create } from "zustand";
+import axios from 'axios';
+import { create } from 'zustand';
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const useAuthStore = create((set) => ({
-  loggedIn: null,
+  loggedIn: false,
   useremail: localStorage.getItem('useremail') || null,  // Load from localStorage
 
   Loginform: {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   },
   Signupform: {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   },
   
   updateloginform: (e) => {
@@ -39,15 +39,15 @@ const useAuthStore = create((set) => ({
     try {
       const { Loginform } = useAuthStore.getState();
       const res = await axios.post(`${baseURL}/login`, Loginform);
-      set({ loggedIn: true });
-      set({ useremail: Loginform.email });
-      localStorage.setItem('useremail', Loginform.email);  // Save to localStorage
       set({
+        loggedIn: true,
+        useremail: Loginform.email,
         Loginform: {
-          email: "",
-          password: "",
+          email: '',
+          password: '',
         },
       });
+      localStorage.setItem('useremail', Loginform.email);  // Save to localStorage
       console.log(res);
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : error.message);
@@ -68,11 +68,10 @@ const useAuthStore = create((set) => ({
     try {
       const { Signupform } = useAuthStore.getState();
       const res = await axios.post(`${baseURL}/signup`, Signupform);
-
       set({
         Signupform: {
-          email: "",
-          password: "",
+          email: '',
+          password: '',
         },
       });
       console.log(res);
@@ -84,8 +83,10 @@ const useAuthStore = create((set) => ({
   logout: async () => {
     try {
       await axios.get(`${baseURL}/logout`);
-      set({ loggedIn: false });
-      set({ useremail: null });
+      set({
+        loggedIn: false,
+        useremail: null,
+      });
       localStorage.removeItem('useremail');  // Remove from localStorage
     } catch (err) {
       console.error('Logout failed:', err.response ? err.response.data : err.message);
