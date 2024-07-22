@@ -38,7 +38,7 @@ const useAuthStore = create((set) => ({
   login: async () => {
     try {
       const { Loginform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/api/v1/login`, Loginform, {
+      const res = await axios.post(`${baseURL}/login`, Loginform, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -62,7 +62,7 @@ const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     try {
-      await axios.get(`${baseURL}/api/v1/check-auth`);
+      await axios.get(`${baseURL}/check-auth`);
       set({ loggedIn: true });
     } catch (err) {
       const errorMessage = err.response ? err.response.data.message : err.message;
@@ -74,7 +74,7 @@ const useAuthStore = create((set) => ({
   signup: async () => {
     try {
       const { Signupform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/api/v1/signup`, Signupform, {
+      const res = await axios.post(`${baseURL}/signup`, Signupform, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -95,7 +95,7 @@ const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
-      await axios.get(`${baseURL}/api/v1/logout`);
+      await axios.get(`${baseURL}/logout`);
       set({
         loggedIn: false,
         useremail: null,
