@@ -38,11 +38,15 @@ const useAuthStore = create((set) => ({
   login: async () => {
     try {
       const { Loginform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/login`, Loginform, {
+      const res = await axios.post(`${baseURL}/api/v1/login`, Loginform, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      // Assuming the token is returned in res.data.token
+      const token = res.data.token; // Adjust based on your API response
+      localStorage.setItem('authToken', token); // Store the token
+      
       set({
         loggedIn: true,
         useremail: Loginform.email,
@@ -51,7 +55,6 @@ const useAuthStore = create((set) => ({
           password: '',
         },
       });
-      localStorage.setItem('useremail', Loginform.email);  // Save to localStorage
       console.log('Login successful:', res.data);
     } catch (error) {
       const errorMessage = error.response ? error.response.data.message : error.message;
