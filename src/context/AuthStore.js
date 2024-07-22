@@ -38,7 +38,11 @@ const useAuthStore = create((set) => ({
   login: async () => {
     try {
       const { Loginform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/login`, Loginform);
+      const res = await axios.post(`${baseURL}/api/v1/login`, Loginform, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       set({
         loggedIn: true,
         useremail: Loginform.email,
@@ -48,18 +52,21 @@ const useAuthStore = create((set) => ({
         },
       });
       localStorage.setItem('useremail', Loginform.email);  // Save to localStorage
-      console.log(res);
+      console.log('Login successful:', res.data);
     } catch (error) {
-      console.error('Login failed:', error.response ? error.response.data : error.message);
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      console.error('Login failed:', errorMessage);
+      alert(`Login failed: ${errorMessage}`);
     }
   },
 
   checkAuth: async () => {
     try {
-      await axios.get(`${baseURL}/check-auth`);
+      await axios.get(`${baseURL}/api/v1/check-auth`);
       set({ loggedIn: true });
     } catch (err) {
-      console.error('Auth check failed:', err.response ? err.response.data : err.message);
+      const errorMessage = err.response ? err.response.data.message : err.message;
+      console.error('Auth check failed:', errorMessage);
       set({ loggedIn: false });
     }
   },
@@ -67,29 +74,37 @@ const useAuthStore = create((set) => ({
   signup: async () => {
     try {
       const { Signupform } = useAuthStore.getState();
-      const res = await axios.post(`${baseURL}/signup`, Signupform);
+      const res = await axios.post(`${baseURL}/api/v1/signup`, Signupform, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       set({
         Signupform: {
           email: '',
           password: '',
         },
       });
-      console.log(res);
+      console.log('Signup successful:', res.data);
     } catch (error) {
-      console.error('Signup failed:', error.response ? error.response.data : error.message);
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      console.error('Signup failed:', errorMessage);
+      alert(`Signup failed: ${errorMessage}`);
     }
   },
 
   logout: async () => {
     try {
-      await axios.get(`${baseURL}/logout`);
+      await axios.get(`${baseURL}/api/v1/logout`);
       set({
         loggedIn: false,
         useremail: null,
       });
       localStorage.removeItem('useremail');  // Remove from localStorage
     } catch (err) {
-      console.error('Logout failed:', err.response ? err.response.data : err.message);
+      const errorMessage = err.response ? err.response.data.message : err.message;
+      console.error('Logout failed:', errorMessage);
+      alert(`Logout failed: ${errorMessage}`);
     }
   }
 }));
